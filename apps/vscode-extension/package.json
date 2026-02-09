@@ -1,0 +1,132 @@
+{
+  "name": "rime-ai",
+  "displayName": "RIME - AI Assistant",
+  "description": "Recursive Intelligence Multi-Agent Environment for VS Code",
+  "version": "0.1.0",
+  "publisher": "rime-ai",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Machine Learning",
+    "Debuggers",
+    "Other"
+  ],
+  "keywords": [
+    "ai",
+    "assistant",
+    "multi-agent",
+    "productivity",
+    "automation"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "rime.openPanel",
+        "title": "Open RIME Panel",
+        "category": "RIME"
+      },
+      {
+        "command": "rime.explainCode",
+        "title": "Explain This Code",
+        "category": "RIME"
+      },
+      {
+        "command": "rime.fixError",
+        "title": "Fix This Error",
+        "category": "RIME"
+      },
+      {
+        "command": "rime.generateDocs",
+        "title": "Generate Documentation",
+        "category": "RIME"
+      },
+      {
+        "command": "rime.searchDocs",
+        "title": "Search Documentation",
+        "category": "RIME"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "rime.explainCode",
+          "group": "9_cutcopypaste@5",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "rime.fixError",
+          "group": "9_cutcopypaste@6",
+          "when": "editorHasSelection"
+        }
+      ]
+    },
+    "views": {
+      "explorer": [
+        {
+          "id": "rimePanel",
+          "name": "RIME",
+          "when": "rime.enabled"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "rime",
+          "title": "RIME",
+          "icon": "$(hubot)"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "RIME",
+      "properties": {
+        "rime.apiUrl": {
+          "type": "string",
+          "default": "http://localhost:3001",
+          "description": "RIME Core Engine API URL"
+        },
+        "rime.enableAutoFix": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable automatic error detection and fix suggestions"
+        },
+        "rime.enableCodeLens": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show RIME CodeLens annotations"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "axios": "^1.6.5",
+    "ws": "^8.16.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rime-ai/rime.git"
+  },
+  "license": "MIT"
+}

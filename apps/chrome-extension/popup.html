@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RIME - AI Assistant</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      width: 380px;
+      min-height: 500px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0a;
+      color: #e5e5e5;
+    }
+    
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+    }
+    
+    .logo {
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .subtitle {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+    
+    .content {
+      padding: 16px;
+    }
+    
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: #171717;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+    }
+    
+    .status-dot.disconnected {
+      background: #ef4444;
+    }
+    
+    .status-text {
+      font-size: 13px;
+      color: #a3a3a3;
+    }
+    
+    .input-container {
+      position: relative;
+      margin-bottom: 16px;
+    }
+    
+    .input {
+      width: 100%;
+      padding: 12px 16px;
+      background: #171717;
+      border: 1px solid #262626;
+      border-radius: 8px;
+      color: #e5e5e5;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    
+    .input:focus {
+      border-color: #06b6d4;
+    }
+    
+    .input::placeholder {
+      color: #737373;
+    }
+    
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    
+    .quick-action {
+      padding: 12px;
+      background: #171717;
+      border: 1px solid #262626;
+      border-radius: 8px;
+      color: #e5e5e5;
+      font-size: 12px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+    }
+    
+    .quick-action:hover {
+      background: #1f1f1f;
+      border-color: #06b6d4;
+    }
+    
+    .section {
+      margin-bottom: 16px;
+    }
+    
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #737373;
+      margin-bottom: 8px;
+    }
+    
+    .page-info {
+      padding: 12px;
+      background: #171717;
+      border-radius: 8px;
+      border-left: 3px solid #06b6d4;
+    }
+    
+    .page-title {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .page-url {
+      font-size: 11px;
+      color: #737373;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .page-type {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 2px 8px;
+      background: #06b6d4;
+      color: #000;
+      font-size: 10px;
+      font-weight: 600;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .action-item {
+      padding: 12px;
+      background: #171717;
+      border-radius: 8px;
+      border-left: 3px solid #8b5cf6;
+    }
+    
+    .action-title {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    
+    .action-description {
+      font-size: 11px;
+      color: #a3a3a3;
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    
+    .btn:hover {
+      opacity: 0.8;
+    }
+    
+    .btn-primary {
+      background: #06b6d4;
+      color: #000;
+    }
+    
+    .btn-secondary {
+      background: #262626;
+      color: #e5e5e5;
+    }
+    
+    .loading {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .loading.active {
+      display: flex;
+    }
+    
+    .spinner {
+      width: 24px;
+      height: 24px;
+      border: 2px solid #262626;
+      border-top-color: #06b6d4;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .footer {
+      padding: 12px 16px;
+      border-top: 1px solid #262626;
+      text-align: center;
+    }
+    
+    .footer-text {
+      font-size: 11px;
+      color: #737373;
+    }
+    
+    .settings-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      padding: 8px;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .settings-panel {
+      display: none;
+      padding: 16px;
+      background: #171717;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    
+    .settings-panel.active {
+      display: block;
+    }
+    
+    .setting-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    
+    .setting-label {
+      font-size: 13px;
+    }
+    
+    .setting-input {
+      padding: 8px 12px;
+      background: #0a0a0a;
+      border: 1px solid #262626;
+      border-radius: 4px;
+      color: #e5e5e5;
+      font-size: 12px;
+      width: 180px;
+    }
+    
+    .toggle {
+      width: 44px;
+      height: 24px;
+      background: #262626;
+      border-radius: 12px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .toggle.active {
+      background: #06b6d4;
+    }
+    
+    .toggle-thumb {
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.2s;
+    }
+    
+    .toggle.active .toggle-thumb {
+      transform: translateX(20px);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">🧠</div>
+    <div>
+      <div class="title">RIME</div>
+      <div class="subtitle">AI Command Center</div>
+    </div>
+    <button class="settings-btn" id="settingsBtn">⚙️</button>
+  </div>
+  
+  <div class="content">
+    <!-- Settings Panel -->
+    <div class="settings-panel" id="settingsPanel">
+      <div class="setting-item">
+        <span class="setting-label">API URL</span>
+        <input type="text" class="setting-input" id="apiUrlInput" value="http://localhost:3001">
+      </div>
+      <div class="setting-item">
+        <span class="setting-label">Auto-extract pages</span>
+        <div class="toggle active" id="autoExtractToggle">
+          <div class="toggle-thumb"></div>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="saveSettings" style="width: 100%;">Save Settings</button>
+    </div>
+    
+    <!-- Status -->
+    <div class="status">
+      <div class="status-dot" id="statusDot"></div>
+      <span class="status-text" id="statusText">Checking connection...</span>
+    </div>
+    
+    <!-- Input -->
+    <div class="input-container">
+      <input type="text" class="input" id="queryInput" placeholder="Ask RIME anything...">
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <button class="quick-action" data-query="Summarize this page">
+        📄 Summarize
+      </button>
+      <button class="quick-action" data-query="Explain the code on this page">
+        💡 Explain Code
+      </button>
+      <button class="quick-action" data-query="Find related documentation">
+        📚 Find Docs
+      </button>
+      <button class="quick-action" data-query="Copy code examples">
+        📋 Copy Code
+      </button>
+    </div>
+    
+    <!-- Page Context -->
+    <div class="section">
+      <div class="section-title">Current Page</div>
+      <div class="page-info" id="pageInfo">
+        <div class="page-title" id="pageTitle">Loading...</div>
+        <div class="page-url" id="pageUrl">-</div>
+        <span class="page-type" id="pageType">Unknown</span>
+      </div>
+    </div>
+    
+    <!-- Actions -->
+    <div class="section">
+      <div class="section-title">Suggested Actions</div>
+      <div class="actions" id="actions">
+        <div class="action-item">
+          <div class="action-description">No actions yet. Ask RIME to get started.</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Loading -->
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+    </div>
+  </div>
+  
+  <div class="footer">
+    <span class="footer-text">RIME v0.1.0 • AI as infrastructure</span>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
