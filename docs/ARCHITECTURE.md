@@ -2,7 +2,7 @@
 
 ## System Overview
 
-RIME (Recursive Intelligence Multi-Agent Environment) is a multi-agent AI system designed to serve as an intelligent command center for developers. The system observes the user's screen, predicts their needs, and orchestrates specialized AI agents to take autonomous action.
+RIME (Recursive Intelligence Multi-Agent Environment) is a multi-agent AI system designed to serve as an intelligent command center for developers. The system observes the user's screen, predicts their needs, and orchestrates specialized AI agents to take autonomous action
 
 ## Core Philosophy
 
