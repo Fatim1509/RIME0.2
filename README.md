@@ -1,4 +1,4 @@
-# RIME: Recursive Intelligence Multi-Agent Environment
+# RIME: Recursive Intelligence Multi-Agent Environment.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/rime-ai/rime/main/apps/dashboard/public/logo.svg" alt="RIME Logo" width="120" />
